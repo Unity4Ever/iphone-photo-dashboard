@@ -1,0 +1,14 @@
+{
+  "name": "iphone-photo-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Responsive iPhone Shortcut photo dashboard with Cloudflare Workers, R2 and KV.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.29.1"
+  }
+}

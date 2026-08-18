@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>iPhone Photo Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Live Shortcut dashboard</p>
+          <h1>iPhone Photo Dashboard</h1>
+          <p class="intro">
+            Toon de nieuwste foto, locatie en apparaatinfo die je iPhone Shortcut naar deze Worker uploadt.
+          </p>
+        </div>
+        <div class="status-pill" id="connectionStatus">Verbinden...</div>
+      </section>
+
+      <section class="control-panel">
+        <button class="primary" id="requestButton" type="button">Foto-opdracht klaarzetten</button>
+        <a class="secondary" id="shortcutLink" href="#">Shortcut openen op iPhone</a>
+        <label class="pin-field">
+          <span>Dashboard PIN</span>
+          <input id="pinInput" inputmode="numeric" autocomplete="one-time-code" placeholder="optioneel">
+        </label>
+      </section>
+
+      <p class="notice" id="requestNotice">
+        Vanaf een pc zet deze knop alleen een opdracht klaar. De iPhone moet de Shortcut zelf starten of periodiek laten controleren.
+      </p>
+
+      <section class="photo-stage">
+        <div class="photo-frame" id="photoFrame">
+          <img id="photo" alt="Nieuwste iPhone foto" hidden>
+          <div class="empty" id="emptyState">
+            <strong>Nog geen foto</strong>
+            <span>Upload straks een foto via de Shortcut.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="metadata-grid" id="metadataGrid" aria-live="polite"></section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
