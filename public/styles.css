@@ -74,7 +74,7 @@ h1 {
 
 .control-panel {
   display: grid;
-  grid-template-columns: auto auto minmax(180px, 260px);
+  grid-template-columns: auto auto minmax(160px, 220px) minmax(220px, 1fr);
   gap: 12px;
   align-items: end;
   padding: 16px;
@@ -114,7 +114,8 @@ button,
   background: #f8fbfa;
 }
 
-.pin-field {
+.pin-field,
+.api-field {
   display: grid;
   gap: 6px;
   color: var(--muted);
@@ -122,7 +123,8 @@ button,
   font-weight: 800;
 }
 
-.pin-field input {
+.pin-field input,
+.api-field input {
   height: 46px;
   width: 100%;
   border: 1px solid var(--line);

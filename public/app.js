@@ -5,13 +5,20 @@ const gridEl = document.querySelector("#metadataGrid");
 const requestButton = document.querySelector("#requestButton");
 const shortcutLink = document.querySelector("#shortcutLink");
 const pinInput = document.querySelector("#pinInput");
+const apiBaseInput = document.querySelector("#apiBaseInput");
 
 const shortcutName = "Photo Dashboard Capture";
 shortcutLink.href = `shortcuts://run-shortcut?name=${encodeURIComponent(shortcutName)}`;
 
 pinInput.value = localStorage.getItem("dashboardPin") || "";
+apiBaseInput.value = localStorage.getItem("dashboardApiBase") || "";
+
 pinInput.addEventListener("input", () => {
   localStorage.setItem("dashboardPin", pinInput.value.trim());
+});
+
+apiBaseInput.addEventListener("input", () => {
+  localStorage.setItem("dashboardApiBase", normalizeApiBase(apiBaseInput.value));
 });
 
 requestButton.addEventListener("click", async () => {
@@ -19,7 +26,7 @@ requestButton.addEventListener("click", async () => {
   requestButton.textContent = "Opdracht klaarzetten...";
 
   try {
-    const response = await fetch("/api/request-photo", {
+    const response = await fetch(apiUrl("/api/request-photo"), {
       method: "POST",
       headers: {
         "x-dashboard-pin": pinInput.value.trim()
@@ -43,7 +50,7 @@ requestButton.addEventListener("click", async () => {
 
 async function refresh() {
   try {
-    const response = await fetch("/api/status", { cache: "no-store" });
+    const response = await fetch(apiUrl("/api/status"), { cache: "no-store" });
     const data = await response.json();
 
     if (!response.ok) {
@@ -60,7 +67,7 @@ function render(data) {
   const meta = data.metadata || {};
 
   if (data.photoUrl) {
-    photoEl.src = data.photoUrl;
+    photoEl.src = absolutizeUrl(data.photoUrl);
     photoEl.hidden = false;
     emptyEl.hidden = true;
   } else {
@@ -142,6 +149,21 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function apiUrl(path) {
+  const base = normalizeApiBase(apiBaseInput.value);
+  return base ? `${base}${path}` : path;
+}
+
+function absolutizeUrl(value) {
+  if (!value) return value;
+  if (/^https?:\/\//i.test(value)) return value;
+  return apiUrl(value.startsWith("/") ? value : `/${value}`);
+}
+
+function normalizeApiBase(value) {
+  return value.trim().replace(/\/+$/, "");
 }
 
 refresh();

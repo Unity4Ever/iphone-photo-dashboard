@@ -26,10 +26,14 @@
           <span>Dashboard PIN</span>
           <input id="pinInput" inputmode="numeric" autocomplete="one-time-code" placeholder="optioneel">
         </label>
+        <label class="api-field">
+          <span>Backend URL</span>
+          <input id="apiBaseInput" type="url" inputmode="url" placeholder="https://...workers.dev">
+        </label>
       </section>
 
       <p class="notice" id="requestNotice">
-        Vanaf een pc zet deze knop alleen een opdracht klaar. De iPhone moet de Shortcut zelf starten of periodiek laten controleren.
+        Op GitHub Pages draait alleen de website. Vul je Cloudflare Worker URL in als backend. Vanaf een pc zet de knop alleen een opdracht klaar; de iPhone moet de Shortcut zelf starten of periodiek laten controleren.
       </p>
 
       <section class="photo-stage">

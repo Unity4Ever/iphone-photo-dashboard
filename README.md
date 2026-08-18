@@ -1,6 +1,6 @@
 # iPhone Photo Dashboard
 
-Een responsive website plus serverless backend waarmee een iPhone Shortcut de nieuwste foto en metadata uploadt. De website werkt op telefoon en pc en toont steeds alleen de laatste foto. Een nieuwe upload overschrijft de vorige foto in R2.
+Een responsive website plus serverless backend waarmee een iPhone Shortcut de nieuwste foto en metadata uploadt. De website kan via GitHub Pages worden gepubliceerd en gebruikt een Cloudflare Worker als backend. De website werkt op telefoon en pc en toont steeds alleen de laatste foto. Een nieuwe upload overschrijft de vorige foto in R2.
 
 ## Wat dit project doet
 
@@ -11,11 +11,12 @@ Een responsive website plus serverless backend waarmee een iPhone Shortcut de ni
 - PC-knop die een foto-opdracht klaarzet op de backend
 - Endpoint waarmee een iPhone Shortcut kan controleren of er een opdracht klaarstaat
 - Geen valse belofte dat een pc rechtstreeks je iPhone-camera kan starten
+- GitHub Pages workflow voor de statische website
 
 ## Architectuur
 
 ```text
-Website op telefoon/pc
+Website op telefoon/pc, bijvoorbeeld GitHub Pages
   -> Cloudflare Worker
   -> KV: metadata + pending opdracht
   -> R2: latest-photo
@@ -35,6 +36,37 @@ Belangrijk: een browser op je pc kan niet direct een Siri Shortcut op je iPhone 
 
 Voor echt automatisch PC -> iPhone heb je een aparte trigger nodig, bijvoorbeeld Pushcut, een periodieke persoonlijke automatisering, of een andere notificatie/automation-app. Zonder zo'n trigger kun je de Shortcut handmatig starten of vanaf de iPhone op de website op "Shortcut openen" tikken.
 
+## GitHub Pages publiceren
+
+Ja: de website zelf kan via GitHub Pages draaien. In deze repo staat daarvoor `.github/workflows/deploy-pages.yml`.
+
+GitHub Pages kan alleen statische bestanden hosten. Daarom kan GitHub Pages niet zelf:
+
+- foto's ontvangen van Shortcuts
+- secrets zoals `UPLOAD_TOKEN` veilig bewaren
+- de nieuwste foto opslaan en vervangen
+- metadata bewaren
+
+Daarom blijft de Cloudflare Worker nodig als backend. Na deployment gebruik je dus twee URLs:
+
+- Website: `https://unity4ever.github.io/iphone-photo-dashboard/`
+- Backend: je Worker URL, bijvoorbeeld `https://iphone-photo-dashboard.<jouw-subdomein>.workers.dev`
+
+### Pages aanzetten
+
+1. Open de repository op GitHub.
+2. Ga naar **Settings** -> **Pages**.
+3. Kies bij **Build and deployment** de source **GitHub Actions**.
+4. Ga naar **Actions** en start eventueel de workflow **Deploy GitHub Pages** handmatig.
+
+Na een succesvolle run opent de website op:
+
+```text
+https://unity4ever.github.io/iphone-photo-dashboard/
+```
+
+Vul op de website bij **Backend URL** je Worker URL in. Die waarde wordt alleen lokaal in je browser bewaard. Op je telefoon en pc moet je dit dus eenmalig invullen.
+
 ## Bestanden
 
 - `public/index.html` - de webinterface
@@ -43,6 +75,7 @@ Voor echt automatisch PC -> iPhone heb je een aparte trigger nodig, bijvoorbeeld
 - `src/index.js` - Cloudflare Worker API
 - `wrangler.jsonc` - Cloudflare Worker, Assets, KV en R2 configuratie
 - `.dev.vars.example` - voorbeeld voor lokale secrets
+- `.github/workflows/deploy-pages.yml` - GitHub Pages publicatie van de statische website
 
 ## Cloudflare setup
 
@@ -104,6 +137,8 @@ https://iphone-photo-dashboard.<jouw-subdomein>.workers.dev
 ```
 
 Gebruik die URL in de Shortcut-stappen hieronder.
+
+Gebruik dezelfde URL ook als **Backend URL** op de GitHub Pages website.
 
 ## Shortcut maken op iPhone
 
